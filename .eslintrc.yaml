@@ -1,0 +1,190 @@
+parserOptions:
+  ecmaVersion: 8
+  sourceType: module
+  ecmaFeatures:
+    jsx: true
+parser: '@typescript-eslint/parser'
+env:
+  browser: true
+  es6: true
+extends:
+  - 'plugin:@typescript-eslint/eslint-recommended'
+  - 'plugin:@typescript-eslint/recommended'
+plugins:
+  - '@typescript-eslint'
+settings:
+  'import/parsers':
+    '@typescript-eslint/parser':
+      - '.ts'
+      - '.tsx'
+  'import/resolver':
+    typescript:
+      extensions:
+        - '.ts'
+        - '.tsx'
+globals:
+  api: true
+  apis: true
+  module: true
+  FB: true
+  $: true
+  _: true
+  Stripe: true
+  grecaptcha: true
+  VERSION: true
+rules:
+  # TS
+  'import/no-unresolved':
+    - off
+  'import/no-cycle':
+    - off
+  '@typescript-eslint/ban-ts-comment':
+    - off
+  '@typescript-eslint/no-var-requires':
+    - off
+  '@typescript-eslint/explicit-function-return-type':
+    - off
+  '@typescript-eslint/no-empty-function':
+    - off
+  '@typescript-eslint/camelcase':
+    - off
+  '@typescript-eslint/member-delimiter-style':
+    - off
+  import/no-named-as-default:
+    - off
+  no-shadow:
+    - off
+  jsx-a11y/no-autofocus:
+    - off
+  no-continue:
+    - off
+  '@typescript-eslint/no-shadow':
+    - off
+  no-unused-vars:
+    - off
+  '@typescript-eslint/no-unused-vars':
+    - warn
+  no-use-before-define:
+    - off
+  '@typescript-eslint/no-use-before-define':
+    - off
+  '@typescript-eslint/no-explicit-any':
+    - off
+  # Configured Rules
+  eqeqeq:
+    - error
+    - smart
+  import/order:
+    - off
+  prefer-regex-literals:
+    - off
+  curly: error
+  max-len:
+    - warn
+    - {
+        code: 130,
+        ignoreStrings: true,
+        ignoreRegExpLiterals: true,
+        ignoreUrls: true,
+        ignoreComments: true,
+        ignoreTemplateLiterals: true,
+      }
+  '@typescript-eslint/indent': off
+  linebreak-style:
+    - error
+    - unix
+  semi:
+    - error
+    - always
+  quotes:
+    - error
+    - single
+  quote-props:
+    - error
+    - as-needed
+  object-curly-spacing:
+    - error
+    - always
+  block-spacing:
+    - error
+    - never
+  padded-blocks:
+    - error
+    - never
+  lines-between-class-members:
+    - error
+    - never
+  arrow-parens:
+    - off
+  no-multiple-empty-lines:
+    - error
+    - { max: 1 }
+  no-console:
+    - error
+  # Pernamently disabled rules
+  no-confusing-arrow:
+    - off
+  no-else-return:
+    - off
+  no-unused-expressions:
+    - off # Incorrect behavior in TypeScript files
+  one-var:
+    - off # This rule is glitchy
+  import/prefer-default-export:
+    - off
+  default-case:
+    - off
+  jsx-a11y/media-has-caption:
+    - off
+  jsx-a11y/label-has-for: # This rule enforces things unrelated to having a 'for'
+    - off
+  jsx-a11y/label-has-associated-control: # This rule is incorrect
+    - off
+  jsx-a11y/anchor-is-valid: # This rule is broken
+    - off
+  no-useless-escape: # Broken for regex
+    - off
+  consistent-return: # Allows for shortcuts (eg. 1 line if (x) return this.setState)
+    - off
+  no-param-reassign:
+    - off
+  no-plusplus:
+    - off
+  array-bracket-spacing:
+    - off
+  no-mixed-operators:
+    - off
+  prefer-destructuring:
+    - off
+  no-nested-ternary:
+    - off
+  prefer-promise-reject-errors:
+    - off
+  no-return-assign:
+    - off
+  # Rules that require major refactoring to fix
+  class-methods-use-this:
+    - off
+  no-magic-numbers:
+    - off
+  sort-keys:
+    - off
+  sort-imports:
+    - off
+  id-length:
+    - off
+  object-curly-newline:
+    - off
+  function-paren-newline:
+    - off
+  global-require:
+    - off
+  no-extra-semi:
+    - off
+  comma-dangle:
+    - off
+  import/no-extraneous-dependencies:
+    - error
+    - devDependencies: true
+  import/extensions:
+    - off
