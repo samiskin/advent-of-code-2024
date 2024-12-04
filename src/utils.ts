@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 
 export const expect = (val: unknown) => {
   return {
@@ -153,6 +153,23 @@ export const print = (col: string, ...args: unknown[]) => {
 export type HashedCoord = `${number} ${number}`;
 export const hash = ([x, y]: [number, number]) => `${x} ${y}` as const;
 
+export const walkCoords = (
+  [x, y]: [number, number],
+  dir: [number, number],
+  steps: number
+) => range(steps + 1).map((i) => [x + i * dir[0], y + i * dir[1]]);
+
+export const walkDirs = (
+  [x, y]: [number, number],
+  steps: number,
+  includeDiag: boolean = false
+) => {
+  const dirs = includeDiag
+    ? getNeighbors([0, 0], true)
+    : getNeighbors([0, 0], false);
+  return dirs.map((dir) => walkCoords([x, y], dir, steps));
+};
+
 export const strToGrid = (arr: string): Record<HashedCoord, string> =>
   arr
     .trim()
@@ -160,7 +177,7 @@ export const strToGrid = (arr: string): Record<HashedCoord, string> =>
     .reduce(
       (map, line, y) => {
         line.split("").forEach((c, x) => {
-          map[hash([x, y])] = c;
+          map[hash([x, -y])] = c;
         });
         return map;
       },
