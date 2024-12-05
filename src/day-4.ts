@@ -1,12 +1,7 @@
-import { range, zip } from "lodash-es";
 import { readFileSync } from "node:fs";
 import {
-  getDimensions,
   getMapPoints,
-  getNeighbors,
-  hash,
-  inBounds,
-  printGrid,
+  h,
   strToGrid,
   walkCoords,
   walkDirs,
@@ -34,9 +29,7 @@ const mapPoints = getMapPoints(grid);
 
 const xmases = mapPoints
   .flatMap(([x, y]) =>
-    dirs.map((dir) =>
-      dir.map(([dx, dy]) => grid[hash([x + dx, y + dy])]).join("")
-    )
+    dirs.map((dir) => dir.map(([dx, dy]) => grid[h(x + dx, y + dy)]).join(""))
   )
   .filter((str) => str === "XMAS").length;
 
@@ -44,8 +37,8 @@ const downRight = walkCoords([0, 0], [1, -1], 2);
 const downLeft = walkCoords([2, 0], [-1, -1], 2);
 const xmases2 = mapPoints
   .map(([x, y]) => [
-    downRight.map(([dx, dy]) => grid[hash([x + dx, y + dy])] || ".").join(""),
-    downLeft.map(([dx, dy]) => grid[hash([x + dx, y + dy])] || ".").join(""),
+    downRight.map(([dx, dy]) => grid[h(x + dx, y + dy)] || ".").join(""),
+    downLeft.map(([dx, dy]) => grid[h(x + dx, y + dy)] || ".").join(""),
   ])
   .filter((values) =>
     values.every((str) => str === "MAS" || str === "SAM")

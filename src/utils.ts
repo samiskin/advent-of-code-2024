@@ -45,6 +45,18 @@ export const mid = (a: number, b: number) => (b - a) / 2 + a;
 export const midf = (...args: Parameters<typeof mid>) =>
   Math.floor(mid(...args));
 
+export const zipLongest = <T, V>(fill: V, ...arrays: Array<Array<T>>) =>
+  arrays.reduce(
+    (acc, arr) => {
+      const longest = Math.max(acc.length, arr.length);
+      return range(longest).map((i) => [
+        ...(acc[i] ?? new Array(acc[0]?.length ?? 0).fill(fill)),
+        arr[i] ?? fill,
+      ]);
+    },
+    [] as Array<Array<T | V>>
+  );
+
 export const repeat = <T, N extends number>(
   val: T,
   size: N
@@ -152,12 +164,14 @@ export const print = (col: string, ...args: unknown[]) => {
 /** hashes [x, y] into `{x} {y}`*/
 export type HashedCoord = `${number} ${number}`;
 export const hash = ([x, y]: [number, number]) => `${x} ${y}` as const;
+export const h = (x: number, y: number) => hash([x, y]);
 
+// returns coordinates from x, y onward, including x, y
 export const walkCoords = (
   [x, y]: [number, number],
-  dir: [number, number],
-  steps: number
-) => range(steps + 1).map((i) => [x + i * dir[0], y + i * dir[1]]);
+  stepAmt: [number, number],
+  numSteps: number
+) => range(numSteps + 1).map((i) => [x + i * stepAmt[0], y + i * stepAmt[1]]);
 
 export const walkDirs = (
   [x, y]: [number, number],
