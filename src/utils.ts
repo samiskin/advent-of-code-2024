@@ -184,14 +184,14 @@ export const walkDirs = (
   return dirs.map((dir) => walkCoords([x, y], dir, steps));
 };
 
-export const strToGrid = (arr: string): Record<HashedCoord, string> =>
+export const strToGrid = (arr: string, direction: 'up' | 'down' = 'up'): Record<HashedCoord, string> =>
   arr
     .trim()
     .split("\n")
     .reduce(
       (map, line, y) => {
         line.split("").forEach((c, x) => {
-          map[hash([x, -y])] = c;
+          map[hash([x, direction === "up" ? -y : y])] = c;
         });
         return map;
       },
@@ -228,7 +228,7 @@ export const printGrid = <T extends string | number | symbol>(
   const min_y = Math.min(...points.map(([_x, y]) => y));
   const max_y = Math.max(...points.map(([_x, y]) => y));
 
-  for (let y_base of range(max_y - min_y + 1)) {
+  for (let y_base of range(max_y - min_y + 1).toReversed()) {
     let output = "";
     for (let x_base of range(max_x - min_x + 1)) {
       let [x, y] = [x_base + min_x, y_base + min_y];
@@ -505,6 +505,14 @@ export const getMapPoints = (
   Object.keys(map)
     .filter((hash) => !!map[hash])
     .map(hashToPoint) as any;
+
+export const rotatePoint = ([x, y]: [number, number], degrees: number): [number, number] => {
+  const radians = -degrees * (Math.PI / 180); // Negative angle for clockwise rotation
+  return [
+    Math.round(x * Math.cos(radians) - y * Math.sin(radians)),
+    Math.round(x * Math.sin(radians) + y * Math.cos(radians)),
+  ];
+};
 
 /** Returns [maxX - minX, maxY - minY] for a grid of coordinates */
 export const getDimensions = (map: Record<string, unknown>) => {
