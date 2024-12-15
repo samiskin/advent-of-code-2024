@@ -184,6 +184,17 @@ export const walkDirs = (
   return dirs.map((dir) => walkCoords([x, y], dir, steps));
 };
 
+export const walkCoordGenerator = function* (
+  [x, y]: [number, number],
+  stepAmt: [number, number]
+) {
+  let i = 0;
+  while (true) {
+    yield [x + i * stepAmt[0], y + i * stepAmt[1]] as [number, number];
+    i++;
+  }
+}
+
 export const strToGrid = (arr: string, direction: 'up' | 'down' = 'up'): Record<HashedCoord, string> =>
   arr
     .trim()
@@ -297,12 +308,14 @@ export function getNeighbors(
 export function bfs<T>(options: {
   map: Record<HashedCoord, T>;
   start: [number, number];
-  isWall?: (val: T) => boolean;
+  isWall?: (val: T, self: T, pos: [number, number]) => boolean;
   visitor?: (
     pos: [number, number],
-    dist?: number,
-    parent?: [number, number]
+    dist: number,
+    parent: [number, number]
   ) => unknown;
+  includeDiag?: boolean;
+  allowRevisits?: boolean;
 }) {
   const defaults = { isWall: (val: T) => !!val, visitor: _.noop };
   const { map, start, isWall, visitor } = { ...defaults, ...options };
@@ -319,16 +332,19 @@ export function bfs<T>(options: {
     const { length, parent } = data[hash(pos)];
     visitor(pos, length, parent);
     visited.add(hash(pos));
-    const next = getNeighbors(pos)
+    const next = getNeighbors(pos, options.includeDiag)
       .filter((n) => !visited.has(hash(n)))
-      .filter((n) => !isWall(map[hash(n)]));
+      .filter((n) => !isWall(map[hash(n)], map[hash(pos)], n));
     next.forEach((n) => {
+      if (!options.allowRevisits) {
+        visited.add(hash(n));
+      }
       data[hash(n)] = {
         length: length + 1,
         parent: pos,
       };
     });
-    toVisit = toVisit.concat(next);
+    toVisit.push(...next);
   }
 
   return data;
